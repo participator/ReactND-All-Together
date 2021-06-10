@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const ErrorMsg = props => {
 	return (
     	props.show &&
-      	<div>{ props.message }</div>
+      	<p>{ props.message }</p>
     )
 }
 

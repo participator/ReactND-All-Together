@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import UserForm from './Components/UserForm.js';
+import UserList from './Components/UserList.js';
 import ErrorMsg from './Components/ErrorMsg.js';
+import GamesPlayed from './Components/GamesPlayed.js';
 
 /*
 This exercise will help you put together and practice all of the concepts you've
@@ -28,20 +30,23 @@ The instructions for this project are located in the `instructions.md` file.
 const App = () => {
   const [users, setUsers] = useState([]);
   const [isNotConflict, setIsNotConflict] = useState(true);
+  const [hideGamesPlayed, setHideGamesPlayed] = useState(false);
   
   const checkUsernameNoConflict = (user) => {
-  	const noConflict = users.every((current) => {
+  	return users.every((current) => {
 		return user.username !== current.username;
     });
-    
-    setIsNotConflict(noConflict);    
   }
   
-  const addUser = (user) => {    
-  	if (isNotConflict) {
+  const addUser = (user) => {
+    const noConflict = checkUsernameNoConflict(user);
+    
+  	if (noConflict) {
       setUsers([...users, user]);
       console.log('noConflict', isNotConflict, 'added', user, 'users', users);
     }
+    
+    setIsNotConflict(noConflict);
   }
   
   return (
@@ -52,23 +57,18 @@ const App = () => {
             <h1 className="App-title">ReactND - Coding Practice</h1>
         </header>
       </div>
-	 <UserForm
-		onAddUser={addUser}
-		noConflict={checkUsernameNoConflict}
-		/>
+	 <UserForm onAddUser={ addUser } />
 		<ErrorMsg 
-			show={!isNotConflict} 
-			message={ `The username is already in use.  Try a different username.` } 
-			/>
-      <div>
-          <button onClick={console.log}>Hide the Number of Games Played</button>
-          <h2>List of Users</h2>
-          <div>
-              <ul>
-                  <li>[username] played 0 games</li>
-              </ul>
-          </div>
-      </div>
+			show={ !isNotConflict } 
+			message={ `The username is already in use.  Try a different username.` } />
+		
+		<GamesPlayed 
+			hideGamesPlayed={ hideGamesPlayed } 
+			setHideGamesPlayed= { setHideGamesPlayed } />
+
+		<UserList
+			users={ users }
+			hideGamesPlayed= { hideGamesPlayed } />
 	</div>
     );
 }

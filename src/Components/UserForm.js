@@ -9,6 +9,7 @@ const UserForm = (props) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
+  const [fieldsNotComplete, setFieldsNotComplete] = useState(true);
   
   const updateUser = element => {
     const {first: firstInput, last: lastInput, username: usernameInput } = element.form.children;
@@ -26,12 +27,17 @@ const UserForm = (props) => {
       default:
         	break;
     }
+    
+    if ( firstInput.value.trim() !== '' &&
+        lastInput.value.trim() !== '' &&
+        usernameInput.value.trim() !== '' )
+      setFieldsNotComplete(false);
+    else
+      setFieldsNotComplete(true);
   };
   
   const addNewUser = () => {
-    const user = { firstName, lastName, username, gamePlays: 0 };
-    console.log('user to add', user);
-    props.noConflict(user);
+    const user = { firstName, lastName, username, gamesPlayed: 0 };
   	props.onAddUser(user);
   }
   
@@ -60,7 +66,9 @@ const UserForm = (props) => {
             <button 
 				onClick={ () => { 
                   addNewUser()
-                } }>
+                } }
+				disabled={ fieldsNotComplete }
+				>
 				Add
 			</button>
           </form>
@@ -70,7 +78,6 @@ const UserForm = (props) => {
 
 UserForm.propTypes = {
   onAddUser: PropTypes.func.isRequired,
-  noConflict: PropTypes.func.isRequired
 };
 
 export default UserForm;
